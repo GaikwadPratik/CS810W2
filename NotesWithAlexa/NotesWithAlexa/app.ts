@@ -7,7 +7,7 @@ import * as applicationLog from './ServerCode/ApplicationLog/ApplicationLog';
 import { Routes } from './ServerCode/Routes/Routes';
 
 
-export class Server{
+export class Server {
 
     /**
      * private instance of express app
@@ -38,7 +38,7 @@ export class Server{
         this.Config();
 
         //Add routes
-        //this.Routes();
+        this.Routes();
     }
 
     /**
@@ -66,6 +66,17 @@ export class Server{
             applicationLog.LogError(err);
         });
     }
+
+    /**
+     * Routes of the  application
+     * @class Server
+     * @method Routes
+     */
+    private Routes() {
+        let router: express.Router = express.Router();
+        new Routes().CreateRoutes(router);
+        this.expressApp.use(router);
+    }
 }
 
 let _expressApp: express.Application = new Server().ExpressApp;
@@ -82,7 +93,7 @@ let _httpServer = http.createServer(_expressApp);
 
 _expressApp.listen(_expressApp.get('port'), function () {
     console.log("We've now got a server to take notes!");
-}); 
+});
 
 
 _httpServer.listen(_httpPort, function () {

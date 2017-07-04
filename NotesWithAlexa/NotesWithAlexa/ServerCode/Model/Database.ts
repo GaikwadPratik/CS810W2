@@ -32,7 +32,7 @@ export class Database {
             this.Connect()
                 .then((result) => {
                     if (result) {
-                        let _collection: MongoDb.Collection<Note, null> = this._dbInstance.collection(this._collectionName);
+                        let _collection = this._dbInstance.collection(this._collectionName);
                         let _note: Note = {
                             name: noteName,
                             text: noteText
@@ -56,7 +56,7 @@ export class Database {
             this.Connect()
                 .then((result) => {
                     if (result) {
-                        let _collection: MongoDb.Collection<Note, null> = this._dbInstance.collection(this._collectionName);
+                        let _collection = this._dbInstance.collection(this._collectionName);
                         _collection
                             .find()
                             .toArray()
