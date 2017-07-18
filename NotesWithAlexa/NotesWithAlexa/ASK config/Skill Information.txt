@@ -1,2 +1,2 @@
 Name: OrionAlexaNotes
-invocation name: take notes for
+invocation name: take notes for {topic}

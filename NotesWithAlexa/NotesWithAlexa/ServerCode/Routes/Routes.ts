@@ -2,6 +2,7 @@
 //export * from './RegistrationRoute/RegistrationRoute';
 import { NextFunction, Request, Response, Router } from 'express';
 import * as ApplicationLog from '../ApplicationLog/ApplicationLog';
+let alexaVerifier = require('alexa-verifier');
 
 
 import { NotesRoute } from './NotesRoute/NotesRoute';
@@ -17,30 +18,43 @@ export class Routes {
      * @param passport
      */
     public CreateRoutes(router: Router) {
-        ApplicationLog.LogDebug('[Routes::CreateRoutes] Starting creation of Admin routes');
+        ApplicationLog.LogDebug('[Routes::CreateRoutes] Starting creation of routes');
 
-        router.get('/Notes/GetNotes', [this.IsAuthenticated, (req: Request, res: Response, next: NextFunction) => {
+        router.get('/Notes/GetNotes', (req: Request, res: Response, next: NextFunction) => {
             new NotesRoute().GetNotes(req, res, next);
-        }]);
+        });
 
         router.get('/Notes/SaveNotes', [this.IsAuthenticated, (req: Request, res: Response, next: NextFunction) => {
             new NotesRoute().SaveNotes(req, res, next);
         }]);
+
+        ApplicationLog.LogDebug('[Routes::CreateRoutes] Completed creation of routes');
     }
 
-    //TODO:: Need to check if this can be used
-    ///**
-    // * This function should be called on every route for which authentication is needed to access.
-    // * @param req {Request} The express request object
-    // * @param res {Respnse} The express response object
-    // * @param next {NextFunction} Execute the next method
-    // */
+
+    /**
+     * This function should be called on every alexa request to do certain verifications.
+     * @param req {Request} The express request object
+     * @param res {Respnse} The express response object
+     * @param next {NextFunction} Execute the next method
+     */
     private IsAuthenticated(req: Request, res: Response, next: NextFunction): NextFunction | void {
+        alexaVerifier(
+            req.headers.signaturecertchainurl,
+            req.headers.signature,
+            req.body,
+            function verificationCallBack(err) {
+                if (err)
+                    res.status(401).json({ message: 'Verification Failure', error: err });
+                else
+                    next();
+            }
+        );
         //try {
         //    //if user is authenticated in session, let them proceed with request
         //    if (req.isAuthenticated()) {
         //        res.locals.isAuthenticated = true;
-                return next();
+        //        return next();
         //    }
         //    else { //else rediect to login page
         //        delete res.locals;

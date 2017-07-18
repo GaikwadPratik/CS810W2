@@ -38,6 +38,9 @@
     <Content Include="package.json" />
     <Content Include="README.md" />
     <TypeScriptCompile Include="ServerCode\ApplicationLog\ApplicationLog.ts" />
+    <TypeScriptCompile Include="ServerCode\Model\AlexaIndex.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="ServerCode\Model\Database.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
