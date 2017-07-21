@@ -2,3 +2,4 @@ NotesWithAlexa/NotesWithAlexa/node_modules/*
 NotesWithAlexa/NotesWithAlexa/obj/*
 NotesWithAlexa/NotesWithAlexa/.tscache/*
 *.suo
+NotesWithAlexa/.vs/NotesWithAlexa/v15/.suo
