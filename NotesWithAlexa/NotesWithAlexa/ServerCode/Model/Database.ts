@@ -3,9 +3,11 @@ import * as applicationLog from '../ApplicationLog/ApplicationLog';
 
 export class Database {
     private _dbClient = MongoDb.MongoClient;
-    private _dbUrl = 'mongodb://localhost/notesapp';
     private _dbInstance: MongoDb.Db = null;
     private _collectionName: string = 'notes';
+    private _dbUserName: string = 'alexaskillsnotes';
+    private _dbPassword: string = 'alexaskillsnotes';
+    private _dbUrl = `mongodb://${this._dbUserName}:${this._dbPassword}@ds115583.mlab.com:15583/noteswithalexaskills`;
 
     /*
      * Create the database instance if not created
