@@ -1,8 +1,7 @@
-TakeNewNotesIntent Take notes of
-TakeNewNotesIntent Take notes for
-TakeNewNotesIntent Save notes for
-TakeNewNotesIntent Save notes of
-AMAZON.HelpIntent Take notes of
-AMAZON.HelpIntent Take notes for
-AMAZON.HelpIntent Save notes for
-AMAZON.HelpIntent Save notes of
+Please use below utterances
+TakeNewNotesIntent Take notes of Test123 as below Test456
+TakeNewNotesIntent Take notes for Test123 as below Test456
+TakeNewNotesIntent Save notes for Test123 as below Test456
+TakeNewNotesIntent Save notes of Test123 as below Test456
+AMAZON.HelpIntent help
+AMAZON.StopIntent Thank you for taking notes

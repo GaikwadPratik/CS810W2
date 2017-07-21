@@ -1,6 +1,16 @@
 {
   "intents": [
     {
+      "slots": [
+        {
+          "name": "Subject",
+          "type": "AMAZON.LITERAL"
+        },
+        {
+          "name": "NotesValue",
+          "type": "AMAZON.LITERAL"
+        }
+      ],
       "intent": "TakeNewNotesIntent"
     },
     {

@@ -1,2 +1,3 @@
-Name: OrionAlexaNotes
-invocation name: take notes for {topic}
+Name: OrionNotesWithAlexa
+invocation name: notes
+app id:  amzn1.ask.skill.a5c052af-59af-4caf-82b1-5ec83f258b4e
