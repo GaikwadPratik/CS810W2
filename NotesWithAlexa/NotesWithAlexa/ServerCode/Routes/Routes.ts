@@ -1,6 +1,4 @@
-﻿//export * from './AdminRoute/AdminRoute';
-//export * from './RegistrationRoute/RegistrationRoute';
-import { NextFunction, Request, Response, Router } from 'express';
+﻿import { NextFunction, Request, Response, Router } from 'express';
 import * as ApplicationLog from '../ApplicationLog/ApplicationLog';
 let alexaVerifier = require('alexa-verifier');
 
@@ -24,7 +22,7 @@ export class Routes {
             new NotesRoute().GetNotes(req, res, next);
         });
 
-        router.get('/Notes/SaveNotes', [this.IsAuthenticated, (req: Request, res: Response, next: NextFunction) => {
+        router.post('/Notes/SaveNotes', [this.IsAuthenticated, this.VerifyApplicationRequest, (req: Request, res: Response, next: NextFunction) => {
             new NotesRoute().SaveNotes(req, res, next);
         }]);
 
@@ -33,41 +31,57 @@ export class Routes {
 
 
     /**
-     * This function should be called on every alexa request to do certain verifications.
+     * This function should be called on every alexa request to do certificate verifications.
      * @param req {Request} The express request object
      * @param res {Respnse} The express response object
      * @param next {NextFunction} Execute the next method
      */
     private IsAuthenticated(req: Request, res: Response, next: NextFunction): NextFunction | void {
+        //Verify request from alexa based on url, cert
+        //TODO:: rewrite using own verifier
         alexaVerifier(
             req.headers.signaturecertchainurl,
             req.headers.signature,
-            req.body,
+            req['rawBody'],
             function verificationCallBack(err) {
-                if (err)
+                if (err) {
+                    ApplicationLog.LogError(err);
                     res.status(401).json({ message: 'Verification Failure', error: err });
+                }
                 else
+                    //if (req.body.session.application.applicationId === "")
                     next();
             }
         );
-        //try {
-        //    //if user is authenticated in session, let them proceed with request
-        //    if (req.isAuthenticated()) {
-        //        res.locals.isAuthenticated = true;
-        //        return next();
-        //    }
-        //    else { //else rediect to login page
-        //        delete res.locals;
-        //        req.logOut();
+    }
 
-        //        if (!req.xhr)
-        //            res.redirect(`/Login/`);
-        //        else
-        //            res.send({ textStatus: null });
-        //    }
-        //}
-        //catch (exception) {
-        //    ApplicationLog.LogException(exception);
-        //}
+    /**
+     * This function should be called on every alexa request to do application verifications.
+     * @param req {Request} The express request object
+     * @param res {Respnse} The express response object
+     * @param next {NextFunction} Execute the next method
+     */
+    private VerifyApplicationRequest(req: Request, res: Response, next: NextFunction): NextFunction | void {
+        try {
+
+            let _askId: string = "amzn1.ask.skill.a5c052af-59af-4caf-82b1-5ec83f258b4e";
+            let _expectedIntents: Array<string> = ["TakeNewNotesIntent", "AMAZON.HelpIntent", "AMAZON.StopIntent", "AMAZON.CancelIntent"];
+
+            let _alexaRequest = req.body;
+            //verify if the app is intended one
+            if (_alexaRequest.session && _alexaRequest.session.application && _alexaRequest.session.application.applicationId === _askId) {
+                //verify if the intent is from the list
+                if (_expectedIntents.indexOf(_alexaRequest.request.intent.name) !== -1)
+                    return next();
+                else
+                    ApplicationLog.LogError(new Error(`Attempted to call unknown intent ${_alexaRequest.request.intent.name}`));
+            }
+
+            ApplicationLog.LogError(new Error(`Application verification for ${_alexaRequest.session.application.applicationId}`));
+            res.status(404).json({ message: 'Unknown application request' });
+        }
+        catch (exception) {
+            ApplicationLog.LogException(exception);
+        }
     }
 }

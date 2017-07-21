@@ -49,7 +49,12 @@ export class Server {
     private Config() {
 
         //use json form parser middleware
-        this.expressApp.use(bodyParser.json());
+        this.expressApp.use(bodyParser.json({            
+            verify: function getRawBody(req, res, buf) {
+                //(req as any).rawBody = buf.toString();
+                req['rawBody'] = buf.toString();
+            }
+        }));
 
         //cookie parsing middleware
         this.expressApp.use(cookieParser());
@@ -82,24 +87,17 @@ export class Server {
 let _expressApp: express.Application = new Server().ExpressApp;
 
 //Set port number
-let _httpPort: number = 3333;
+let _httpPort: number = 80;
 
 //set port
-_expressApp.set('port', (process.env.PORT || 3000));
+_expressApp.set('port', (process.env.PORT || _httpPort));
 
 //Start the server and listen on the port
 //TODO:: to convert to HTTPS
 let _httpServer = http.createServer(_expressApp);
 
 _expressApp.listen(_expressApp.get('port'), function () {
-    console.log("We've now got a server to take notes!");
-});
-
-
-_httpServer.listen(_httpPort, function () {
-    let addr = _httpServer.address();
-    let listeningPort = typeof (addr) === 'string' ? `pipe ${addr}` : `port ${addr.port}`;
-    applicationLog.LogInfo(`Listening on port ${listeningPort}`);
+    applicationLog.LogDebug("We've now got a server to take notes!");
 });
 
 //if any errors in the server
