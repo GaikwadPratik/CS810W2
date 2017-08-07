@@ -73,6 +73,37 @@ export class Database {
                                 resolve(_notes);
                             })
                             .catch((err) => {
+                                applicationLog.LogError(err);
+                                reject();
+                            })
+                    }
+                })
+                .catch((err) => {
+                    reject();
+                })
+        });
+    }
+
+    public GetNotesBySubject(subjectName: string) {
+        return new Promise((resolve, reject) => {
+            this.Connect()
+                .then((result) => {
+                    if (result) {
+                        let _collection = this._dbInstance.collection(this._collectionName);
+                        _collection
+                            .find({ name: subjectName })
+                            .toArray()
+                            .then((results) => {
+                                let _notes: Array<Note> = results.map((x: Note) => {
+                                    let _note = new Note();
+                                    _note.name = x.name;
+                                    _note.text = x.text;
+                                    return _note;
+                                });
+
+                                resolve(_notes);
+                            })
+                            .catch((err) => {
                                 reject();
                             })
                     }

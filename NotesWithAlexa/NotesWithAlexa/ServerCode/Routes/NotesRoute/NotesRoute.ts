@@ -45,7 +45,7 @@ export class NotesRoute {
 
         //When alexa is started using app key words
         if (_alexaRequest.type === "LaunchRequest") {
-            _responseObject = this.BuildResponse({}, "I am ready to take some notes. Please begin giving me data", "You started the Node.js Echo Notes API", false);
+            _responseObject = this.BuildResponse({}, "I am ready to take some notes. Please begin giving me data", "You started notes taking application", false);
             res.json(_responseObject);
         }
         //when session of alex ends due to an error
@@ -69,11 +69,32 @@ export class NotesRoute {
                     let _database = new Database();
                     _database.Insert(_noteName, _noteText)
                         .then((result) => {
-                            _responseObject = this.BuildResponse({}, "Notes saved successfully", "You started the Node.js Echo Notes API", true);
+                            _responseObject = this.BuildResponse({}, "Your notes were successfully saved in database", "Your notes were successfully saved in database", true);
                             res.json(_responseObject);
                         })
                         .catch((err) => {
-                            _responseObject = this.BuildResponse({}, "There was some error in saving the notes", "You started the Node.js Echo Notes API", true);
+                            _responseObject = this.BuildResponse({}, "There was some error in saving the notes", "There was some error in saving the notes", true);
+                            res.json(_responseObject);
+                        });
+                }
+                else if (_alexaRequest.type === 'IntentRequest' && _alexaIntent.name === 'RetrieveNotesIntent') {
+                    let _alexaSlots = _alexaIntent.slots;
+                    //extract the slot value from the intent request
+                    let _noteName = _alexaSlots.Subject.value;
+
+                    //save the value in the database
+                    let _database = new Database();
+                    _database.GetNotesBySubject(_noteName)
+                        .then((result) => {
+                            
+                            if (Array.isArray(result))
+                                _responseObject = this.BuildResponse({}, result[0].text, "Your notes were successfully retrieved from database", true);
+                            else
+                                _responseObject = this.BuildResponse({}, (<any>result).text, "Your notes were successfully retrieved from database", true);
+                            res.json(_responseObject);
+                        })
+                        .catch((err) => {
+                            _responseObject = this.BuildResponse({}, "There was some error in getting the notes", "There was some error in getting the notes", true);
                             res.json(_responseObject);
                         });
                 }

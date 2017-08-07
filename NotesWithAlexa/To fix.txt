@@ -1,0 +1,19 @@
+1. Your skill improperly uses Amazon brands or trademarks. For permitted uses of certain Amazon brands and trademarks in connection with the distribution of your skill through our Program, please consult our Trademark Guidelines, found here:
+
+ 
+
+https:////www.amazon.com//gp//help//customer//display.html?ie=UTF8&nodeId=201713630
+
+ 
+
+Please update your Skill's Title to remove the improperly used Amazon brand or trademark and resubmit your Skill for reconsideration.
+
+5. The core functionality of the skill could not be completed using only customer facing information.  Make sure that the skill’s description and prompts make navigation easy and the core functionality clear to users.
+
+ 
+
+As per description the user can save and retrieve the notes. The skill needs account linking feature in order to store and retrieve individual data(notes).
+
+ 
+
+Expected Result: Please provide account linking feature to complete core functionality of the skill. 

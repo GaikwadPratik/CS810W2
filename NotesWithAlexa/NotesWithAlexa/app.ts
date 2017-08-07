@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 import * as http from 'http';
+import * as https from 'https';
 import * as applicationLog from './ServerCode/ApplicationLog/ApplicationLog';
 import { Routes } from './ServerCode/Routes/Routes';
 
@@ -98,6 +99,9 @@ let _httpServer = http.createServer(_expressApp);
 
 _expressApp.listen(_expressApp.get('port'), function () {
     applicationLog.LogDebug("We've now got a server to take notes!");
+    setInterval(() => {
+        https.get("https://alexaskillnotesapp.herokuapp.com/Notes/GetNotes");
+    }, 60000);
 });
 
 //if any errors in the server

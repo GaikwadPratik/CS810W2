@@ -65,11 +65,12 @@ export class Routes {
         try {
 
             let _askId: string = "amzn1.ask.skill.a5c052af-59af-4caf-82b1-5ec83f258b4e";
-            let _expectedIntents: Array<string> = ["TakeNewNotesIntent", "AMAZON.HelpIntent", "AMAZON.StopIntent", "AMAZON.CancelIntent"];
+            let _expectedIntents: Array<string> = ["TakeNewNotesIntent", "RetrieveNotesIntent", "AMAZON.HelpIntent", "AMAZON.StopIntent", "AMAZON.CancelIntent"];
 
             let _alexaRequest = req.body;
             //verify if the app is intended one
-            if (_alexaRequest.session && _alexaRequest.session.application && _alexaRequest.session.application.applicationId === _askId) {
+            if (_alexaRequest.session && _alexaRequest.session.application && _alexaRequest.session.application.applicationId === _askId) {                
+
                 //verify if the intent is from the list
                 if (_expectedIntents.indexOf(_alexaRequest.request.intent.name) !== -1)
                     return next();
@@ -77,7 +78,7 @@ export class Routes {
                     ApplicationLog.LogError(new Error(`Attempted to call unknown intent ${_alexaRequest.request.intent.name}`));
             }
 
-            ApplicationLog.LogError(new Error(`Application verification for ${_alexaRequest.session.application.applicationId}`));
+            ApplicationLog.LogError(new Error(`Application verification failed for ${_alexaRequest.session.application.applicationId}`));
             res.status(404).json({ message: 'Unknown application request' });
         }
         catch (exception) {
